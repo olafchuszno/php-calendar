@@ -22,7 +22,6 @@ if (is_string($calendar)) {
   $hasError = true;
 }
 
-
 ?>
 
 <!DOCTYPE html>
@@ -31,29 +30,52 @@ if (is_string($calendar)) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Kalendarz</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<form action="/" method="GET">
-  <input class="border-4" name="<?= $START_DAY_OF_THE_WEEK ?>" type="number" placeholder="Pierwszy dzień">
-  
-  <input class="border-4" name="<?= $DAYS_IN_MONTH ?>" type="number" placeholder="Dni w miesiącu">
-  
-  <button type="submit">Stwórz kalendarz</button>
-</form>
+<body class="flex flex-col items-center gap-6 pt-8">
+  <h1 class="text-2xl font-regular">Wpisz dane, zeby stworzyć kalendarz</h1>
 
-<body>
-  <h1>Wpisz dane, zeby stworzyć kalendarz</h1>
+  <form class="flex flex-col gap-4 p-6 bg-gray-200 rounded-xl" action="/" method="GET">
+    <div class="flex gap-2">
+      <label class="flex flex-col">
+        Pierwszy dzień
+        <input
+          class="border-4 pl-2"
+          name="<?= $START_DAY_OF_THE_WEEK ?>"
+          type="number"
+          placeholder="Poniedziałek=1"
+          value="<?= $start_day_of_the_week ?>"
+        >
+      </label>
+
+      <label class="flex flex-col">
+        Dni w miesiącu
+        <input 
+          class="border-4 pl-2" 
+          name="<?= $DAYS_IN_MONTH ?>" 
+          type="number" 
+          placeholder="np. 30"
+          value="<?= $days_in_month ?>"
+        >
+      </label>
+    </div>
+
+    <button
+      class="bg-gray-400 text-white px-2 py-1 rounded-l hover:bg-gray-700"
+      type="submit"
+    >
+      Stwórz kalendarz
+    </button>
+  </form>
 
   <?php
-  
 
   if ($hasError) {
-    echo 2;
     echo "<p>$calendar</p>";
+    echo 'ERROR';
   } else {
-    echo 3;
     echo "<table><thead>";
 
     foreach ($days_of_week as $day) {
@@ -64,9 +86,7 @@ if (is_string($calendar)) {
 
     echo "</thead><tbody>";
 
-    echo "--3";
     if (is_array($calendar)) {
-      echo "--4";
       foreach ($calendar as $week) {
         echo "<tr>";
 
@@ -83,6 +103,7 @@ if (is_string($calendar)) {
   ?>
 
 </body>
+
 </html>
 
 <?php
@@ -90,7 +111,7 @@ if (is_string($calendar)) {
 function createCalendar(int $start_day_of_the_week, int $days_in_month)
 {
   if ($start_day_of_the_week < 0 || $start_day_of_the_week > 7) {
-    return 'Proszę podać dzień początkowy między 1 a 7'.' podany dzień to: '.$start_day_of_the_week;
+    return 'Proszę podać dzień początkowy między 1 a 7' . ' podany dzień to: ' . $start_day_of_the_week;
   }
 
   if ($days_in_month < 0 || $start_day_of_the_week > 31) {
