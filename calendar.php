@@ -18,7 +18,6 @@ for ($i = 0; $i < $days_in_month + $start_day_index; $i++) {
 
     // Dodaliśmy dzień, więc uzupełniamy counter
     $current_day_of_week++;
-
     continue;
   }
 
@@ -47,29 +46,39 @@ for ($i = 0; $i < $days_in_month + $start_day_index; $i++) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body>
   <table>
     <thead>
-        <?php 
-          foreach ($calendar as $week) {
-            echo "<tr>";
-            
-            foreach ($week as $day) {
-              echo isset($day) ? "<td>$day</td>" : '<td></td>';
-            }
+      <?php
+        foreach ($days_of_week as $day) {
+          $class = $day === 'N' ? "text-white bg-red-700" : 'text-white bg-gray-700';
 
-            echo "</tr>";
-          }
-        ?> 
+          echo isset($day) ? "<th class='$class'>$day</th>" : '<th></th>';
+        }
+      ?>
     </thead>
     <tbody>
-      <tr></tr>
+      <?php
+      foreach ($calendar as $week) {
+        echo "<tr>";
+
+        foreach ($week as $day) {
+          echo isset($day) ? "<td class='p-2'>$day</td>" : '<td></td>';
+        }
+
+        echo "</tr>";
+      }
+      ?>
     </tbody>
   </table>
 </body>
+
 </html>
