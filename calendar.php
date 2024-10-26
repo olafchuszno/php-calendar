@@ -22,9 +22,7 @@ for ($i = 0; $i < $days_in_month + $start_day_index; $i++) {
   }
 
   // Jeśli jest miejsce w tym tygodniu
-  if ($current_day_of_week <= 7) {
-    $calendar[$current_week_of_month][] = $current_day_of_month;
-  } else {
+  if ($current_day_of_week > 7) {
     // Przejdź do kolejnego tygodnia
     $current_week_of_month++;
 
@@ -33,11 +31,12 @@ for ($i = 0; $i < $days_in_month + $start_day_index; $i++) {
 
     // Wyzeruj dzień tygodnia na 1 (poniedziałek)
     $current_day_of_week = 1;
-
-    // Wypełnij dzień w kalendarzu
-    $calendar[$current_week_of_month][] = $current_day_of_month;
   }
 
+  // Wypełnij dzień w kalendarzu
+  $calendar[$current_week_of_month][] = $current_day_of_month;
+
+  // Odświez countery
   $current_day_of_week++;
   $current_day_of_month++;
 }
