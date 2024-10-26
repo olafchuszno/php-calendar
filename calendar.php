@@ -2,21 +2,35 @@
 
 $days_of_week = ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'SO', 'N'];
 
-$START_DAY_OF_THE_WEEK = 'start_day_of_the_week';
-$DAYS_IN_MONTH = 'days_in_month';
+$monthNamesInPolish = [
+  'Styczeń',
+  'Luty',
+  'Marzec',
+  'Kwiecień',
+  'Maj',
+  'Czerwiec',
+  'Lipiec',
+  'Sierpień',
+  'Wrzesień',
+  'Październik',
+  'Listopad',
+  'Grudzień'
+];
 
-$start_day_of_the_week = isset($_GET[$START_DAY_OF_THE_WEEK])
-  ? (int)$_GET[$START_DAY_OF_THE_WEEK]
-  : 3;
+$YEAR = 'year';
+$MONTH = 'month';
 
-$days_in_month = isset($_GET[$DAYS_IN_MONTH])
-  ? (int)$_GET[$DAYS_IN_MONTH]
-  : 30;
+$month = isset($_GET[$MONTH])
+  ? (int)$_GET[$MONTH]
+  : 10;
+
+$year = isset($_GET[$YEAR])
+  ? (int)$_GET[$YEAR]
+  : 2024;
 
 $hasError = false;
 
-
-$calendar = createCalendar((int)$start_day_of_the_week, (int)$days_in_month);
+$calendar = createCalendar((int)$year, (int)$month);
 
 if (is_string($calendar)) {
   $hasError = true;
@@ -40,26 +54,27 @@ if (is_string($calendar)) {
   <form class="flex flex-col gap-4 p-6 bg-gray-200 rounded-xl" action="/" method="GET">
     <div class="flex gap-2">
       <label class="flex flex-col">
-        Pierwszy dzień
+        Miesiąc roku
         <input
           class="border-4 pl-2"
-          name="<?= $START_DAY_OF_THE_WEEK ?>"
+          name="<?= $MONTH ?>"
           type="number"
-          placeholder="Poniedziałek=1"
-          value="<?= $start_day_of_the_week ?>"
+          placeholder="np. Luty"
+          value="<?= $month ?>"
         >
+
+        <label class="flex flex-col">
+          Rok
+          <input 
+            class="border-4 pl-2" 
+            name="<?= $YEAR ?>" 
+            type="number" 
+            placeholder="np. 2024"
+            value="<?= $year ?>"
+          >
+        </label>
       </label>
 
-      <label class="flex flex-col">
-        Dni w miesiącu
-        <input 
-          class="border-4 pl-2" 
-          name="<?= $DAYS_IN_MONTH ?>" 
-          type="number" 
-          placeholder="np. 30"
-          value="<?= $days_in_month ?>"
-        >
-      </label>
     </div>
 
     <button
@@ -72,11 +87,23 @@ if (is_string($calendar)) {
 
   <?php
 
-  if ($hasError) {
+  if ($hasError || !is_array($calendar)) {
     echo "<p>$calendar</p>";
-    echo 'ERROR';
-  } else {
-    echo "<table><thead>";
+
+    echo "</body></html>";
+    return;
+  }
+
+    echo "<section><table><thead>";
+
+    echo "<div class='pb-2 px-1 items-center flex w-100% justify-between'>
+        <span class='text-xl text-red-500 font-bold'>
+          $monthNamesInPolish[$month]
+        </span>
+
+        <span class='text-l font-bold'>$year</span>
+      </div>
+    ";
 
     foreach ($days_of_week as $day) {
       $class = $day === 'N' ? "text-white bg-red-700" : 'text-white bg-gray-700';
@@ -84,22 +111,17 @@ if (is_string($calendar)) {
       echo isset($day) ? "<th class='$class'>$day</th>" : '<th></th>';
     }
 
-    echo "</thead><tbody>";
-
-    if (is_array($calendar)) {
       foreach ($calendar as $week) {
-        echo "<tr>";
+        echo "<tr class='border-b-1 border-red'>";
 
         foreach ($week as $day) {
-          echo isset($day) ? "<td class='p-2'>$day</td>" : '<td></td>';
+          echo isset($day) ? "<td class='p-2 font-bold'>$day</td>" : '<td></td>';
         }
 
         echo "</tr>";
       }
-    }
 
-    echo "</tbody></table>";
-  }
+    echo "</tbody></table></section>";
   ?>
 
 </body>
@@ -108,15 +130,22 @@ if (is_string($calendar)) {
 
 <?php
 // Wpisz dzień początkowy: Poniedziałek=1 ... Niedziela=7
-function createCalendar(int $start_day_of_the_week, int $days_in_month)
+function createCalendar(int $year, int $month)
 {
-  if ($start_day_of_the_week < 0 || $start_day_of_the_week > 7) {
-    return 'Proszę podać dzień początkowy między 1 a 7' . ' podany dzień to: ' . $start_day_of_the_week;
+  if ($year < 0 || $year > 3000) {
+    return 'Proszę podać prawidłowy rok (między 0 a 3000)';
   }
 
-  if ($days_in_month < 0 || $start_day_of_the_week > 31) {
-    return 'Proszę podać ilość dni w miesiącu między 1 a 31';
+  if ($month < 1 || $month > 12) {
+    return 'Proszę parwidłowy miesiąc (między 1 a 12)';
   }
+
+  // Ustaw strefę czasową dla ułatwienia formatu daty
+  date_default_timezone_set('Europe/Warsaw');
+
+  $firstDayOfMonth = new DateTime("$year-$month-01");
+  $days_in_month = $firstDayOfMonth->format('t');
+  $start_day_of_the_week = (int)$firstDayOfMonth->format('N');
 
   $calendar = [[]];
 
