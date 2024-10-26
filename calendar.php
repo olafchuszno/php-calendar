@@ -44,6 +44,8 @@ if (is_string($calendar)) {
 </form>
 
 <body>
+  <h1>Wpisz dane, zeby stworzyć kalendarz</h1>
+
   <?php
   
   echo "<h1>Wpisz dane, zeby stworzyć kalendarz";
