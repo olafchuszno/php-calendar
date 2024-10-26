@@ -126,7 +126,7 @@ if (is_string($calendar)) {
 </html>
 
 <?php
-// Wpisz dzień początkowy: Poniedziałek=1 ... Niedziela=7
+
 function createCalendar(int $year, int $month)
 {
   if ($year < 0 || $year > 3000) {
