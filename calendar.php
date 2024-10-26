@@ -21,8 +21,8 @@ $YEAR = 'year';
 $MONTH = 'month';
 
 $date_for_calendar = isset($_GET['date_for_calendar'])
-? $_GET['date_for_calendar']
-: '2024-10';
+  ? $_GET['date_for_calendar']
+  : '2024-10';
 
 
 [$year, $month] = explode('-', $date_for_calendar);
@@ -32,11 +32,8 @@ $month = (int)$month;
 
 $calendar = createCalendar($year, $month);
 
-$hasError = false;
+$hasError = is_string($calendar);
 
-if (is_string($calendar)) {
-  $hasError = true;
-}
 
 ?>
 
