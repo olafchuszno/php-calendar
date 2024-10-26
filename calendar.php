@@ -2,18 +2,26 @@
 
 $days_of_week = ['Pn', 'Wt', 'Śr', 'Cz', 'Pt', 'SO', 'N'];
 
-$start_day_of_the_week = $_GET['start_day_of_the_week'];
-$days_in_month = $_GET['days_in_month'];
+$START_DAY_OF_THE_WEEK = 'start_day_of_the_week';
+$DAYS_IN_MONTH = 'days_in_month';
 
-$hasCalendarData = isset($start_day_of_the_week) && isset($days_in_month);
+$start_day_of_the_week = isset($_GET[$START_DAY_OF_THE_WEEK])
+  ? (int)$_GET[$START_DAY_OF_THE_WEEK]
+  : 3;
+
+$days_in_month = isset($_GET[$DAYS_IN_MONTH])
+  ? (int)$_GET[$DAYS_IN_MONTH]
+  : 30;
+
 $hasError = false;
 
-if ($hasCalendarData) {
-  $calendar = createCalendar((int)$start_day_of_the_week, (int)$days_in_month);
-  if (is_string($calendar)) {
-    $hasError = true;
-  }
+
+$calendar = createCalendar((int)$start_day_of_the_week, (int)$days_in_month);
+
+if (is_string($calendar)) {
+  $hasError = true;
 }
+
 
 ?>
 
@@ -27,35 +35,53 @@ if ($hasCalendarData) {
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
+<form action="/" method="GET">
+  <input class="border-4" name="<?= $START_DAY_OF_THE_WEEK ?>" type="number" placeholder="Pierwszy dzień">
+  
+  <input class="border-4" name="<?= $DAYS_IN_MONTH ?>" type="number" placeholder="Dni w miesiącu">
+  
+  <button type="submit">Stwórz kalendarz</button>
+</form>
+
 <body>
-  <table>
-    <thead>
-      <?php
-      foreach ($days_of_week as $day) {
-        $class = $day === 'N' ? "text-white bg-red-700" : 'text-white bg-gray-700';
+  <?php
+  
+  echo "<h1>Wpisz dane, zeby stworzyć kalendarz";
 
-        echo isset($day) ? "<th class='$class'>$day</th>" : '<th></th>';
-      }
-      ?>
-    </thead>
-    <tbody>
-      <?php
-      if (is_array($calendar)) {
-        foreach ($calendar as $week) {
-          echo "<tr>";
+  if ($hasError) {
+    echo 2;
+    echo "<p>$calendar</p>";
+  } else {
+    echo 3;
+    echo "<table><thead>";
 
-          foreach ($week as $day) {
-            echo isset($day) ? "<td class='p-2'>$day</td>" : '<td></td>';
-          }
+    foreach ($days_of_week as $day) {
+      $class = $day === 'N' ? "text-white bg-red-700" : 'text-white bg-gray-700';
 
-          echo "</tr>";
+      echo isset($day) ? "<th class='$class'>$day</th>" : '<th></th>';
+    }
+
+    echo "</thead><tbody>";
+
+    echo "--3";
+    if (is_array($calendar)) {
+      echo "--4";
+      foreach ($calendar as $week) {
+        echo "<tr>";
+
+        foreach ($week as $day) {
+          echo isset($day) ? "<td class='p-2'>$day</td>" : '<td></td>';
         }
-      }
-      ?>
-    </tbody>
-  </table>
-</body>
 
+        echo "</tr>";
+      }
+    }
+
+    echo "</tbody></table>";
+  }
+  ?>
+
+</body>
 </html>
 
 <?php
@@ -63,10 +89,10 @@ if ($hasCalendarData) {
 function createCalendar(int $start_day_of_the_week, int $days_in_month)
 {
   if ($start_day_of_the_week < 0 || $start_day_of_the_week > 7) {
-    return 'Proszę podać dzień początkowy między 1 a 7';
+    return 'Proszę podać dzień początkowy między 1 a 7'.' podany dzień to: '.$start_day_of_the_week;
   }
 
-  if ($$days_in_month < 0 || $start_day_of_the_week > 31) {
+  if ($days_in_month < 0 || $start_day_of_the_week > 31) {
     return 'Proszę podać ilość dni w miesiącu między 1 a 31';
   }
 
@@ -106,5 +132,7 @@ function createCalendar(int $start_day_of_the_week, int $days_in_month)
     $current_day_of_week++;
     $current_day_of_month++;
   }
+
+  return $calendar;
 }
 ?>
