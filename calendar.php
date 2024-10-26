@@ -20,17 +20,19 @@ $monthNamesInPolish = [
 $YEAR = 'year';
 $MONTH = 'month';
 
-$month = isset($_GET[$MONTH])
-  ? (int)$_GET[$MONTH]
-  : 10;
+$date_for_calendar = isset($_GET['date_for_calendar'])
+? $_GET['date_for_calendar']
+: '2024-10';
 
-$year = isset($_GET[$YEAR])
-  ? (int)$_GET[$YEAR]
-  : 2024;
+
+[$year, $month] = explode('-', $date_for_calendar);
+
+$year = (int)$year;
+$month = (int)$month;
+
+$calendar = createCalendar($year, $month);
 
 $hasError = false;
-
-$calendar = createCalendar((int)$year, (int)$month);
 
 if (is_string($calendar)) {
   $hasError = true;
@@ -54,23 +56,13 @@ if (is_string($calendar)) {
   <form class="flex flex-col gap-4 p-6 bg-gray-200 rounded-xl" action="/" method="GET">
     <div class="flex gap-2">
       <label class="flex flex-col">
-        Miesiąc roku
+        Rok i miesiąc
         <input
           class="border-4 pl-2"
-          name="<?= $MONTH ?>"
-          type="number"
+          name="date_for_calendar"
+          type="month"
           placeholder="np. Luty"
           value="<?= $month ?>">
-
-        <label class="flex flex-col">
-          Rok
-          <input
-            class="border-4 pl-2"
-            name="<?= $YEAR ?>"
-            type="number"
-            placeholder="np. 2024"
-            value="<?= $year ?>">
-        </label>
       </label>
 
     </div>
