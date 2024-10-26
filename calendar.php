@@ -48,7 +48,6 @@ if (is_string($calendar)) {
 
   <?php
   
-  echo "<h1>Wpisz dane, zeby stworzyć kalendarz";
 
   if ($hasError) {
     echo 2;
