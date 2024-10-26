@@ -60,18 +60,16 @@ if (is_string($calendar)) {
           name="<?= $MONTH ?>"
           type="number"
           placeholder="np. Luty"
-          value="<?= $month ?>"
-        >
+          value="<?= $month ?>">
 
         <label class="flex flex-col">
           Rok
-          <input 
-            class="border-4 pl-2" 
-            name="<?= $YEAR ?>" 
-            type="number" 
+          <input
+            class="border-4 pl-2"
+            name="<?= $YEAR ?>"
+            type="number"
             placeholder="np. 2024"
-            value="<?= $year ?>"
-          >
+            value="<?= $year ?>">
         </label>
       </label>
 
@@ -79,8 +77,7 @@ if (is_string($calendar)) {
 
     <button
       class="bg-gray-400 text-white px-2 py-1 rounded-l hover:bg-gray-700"
-      type="submit"
-    >
+      type="submit">
       Stwórz kalendarz
     </button>
   </form>
@@ -94,9 +91,9 @@ if (is_string($calendar)) {
     return;
   }
 
-    echo "<section><table><thead>";
+  echo "<section><table><thead>";
 
-    echo "<div class='pb-2 px-1 items-center flex w-100% justify-between'>
+  echo "<div class='pb-2 px-1 items-center flex w-100% justify-between'>
         <span class='text-xl text-red-500 font-bold'>
           $monthNamesInPolish[$month]
         </span>
@@ -105,23 +102,23 @@ if (is_string($calendar)) {
       </div>
     ";
 
-    foreach ($days_of_week as $day) {
-      $class = $day === 'N' ? "text-white bg-red-700" : 'text-white bg-gray-700';
+  foreach ($days_of_week as $day) {
+    $class = $day === 'N' ? "text-white bg-red-700" : 'text-white bg-gray-700';
 
-      echo isset($day) ? "<th class='$class'>$day</th>" : '<th></th>';
+    echo isset($day) ? "<th class='$class'>$day</th>" : '<th></th>';
+  }
+
+  foreach ($calendar as $week) {
+    echo "<tr class='border-b-1 border-red'>";
+
+    foreach ($week as $day) {
+      echo isset($day) ? "<td class='p-2 font-bold'>$day</td>" : '<td></td>';
     }
 
-      foreach ($calendar as $week) {
-        echo "<tr class='border-b-1 border-red'>";
+    echo "</tr>";
+  }
 
-        foreach ($week as $day) {
-          echo isset($day) ? "<td class='p-2 font-bold'>$day</td>" : '<td></td>';
-        }
-
-        echo "</tr>";
-      }
-
-    echo "</tbody></table></section>";
+  echo "</tbody></table></section>";
   ?>
 
 </body>
@@ -144,7 +141,9 @@ function createCalendar(int $year, int $month)
   date_default_timezone_set('Europe/Warsaw');
 
   $firstDayOfMonth = new DateTime("$year-$month-01");
+
   $days_in_month = $firstDayOfMonth->format('t');
+
   $start_day_of_the_week = (int)$firstDayOfMonth->format('N');
 
   $calendar = [[]];
