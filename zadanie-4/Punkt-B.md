@@ -5,7 +5,6 @@
 * Ze screena rozumiem ze błąd dotyczy błędu przy walidacji danych.
 * Błąd występuje kiedy próbujemy stworzyć wniosek dla osoby, która pracowała tylko jeden dzień, a w formularzu wpisujemy tą samą datę w polach "od" i "do"
 
-
 ## Zaproponowane rozwiązania
 
 ### Rozwiązanie 1
@@ -17,3 +16,4 @@
 ### Rozwiązanie 2
 * Zmienić obecną walidację i traktować pole "od" jako datę dnia rozpoczynającego się od "00:01", a pole "do" jako datę dnia kończącego o 23:59.
 * Wtedy zamiast sprawdzać, czy ilość przepracowanych dni to przynajmniej 1, mozemy sprawdzać, czy ilość przepracowanych godzin jest większa od 0.
+
